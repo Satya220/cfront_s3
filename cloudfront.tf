@@ -1,8 +1,16 @@
 resource "aws_s3_bucket" "test_web" {
-  bucket = "cfront_bucket"
+  bucket = "escavalar-bucket"
 
   tags = {
     Name = "Test_bucket"
+  }
+}
+
+resource "aws_s3_bucket" "log_storage" {
+  bucket = "bscavalar-bucket"
+
+  tags = {
+    Name = "Log_bucket"
   }
 }
 
@@ -39,7 +47,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = "mylogs.s3.amazonaws.com"
+    bucket          = aws_s3_bucket.log_storage.bucket
     prefix          = "myprefix"
   }
 
