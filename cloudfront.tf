@@ -61,7 +61,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = aws_s3_bucket.log_storage.id
+    bucket          = "bscavalar-bucket.s3.amazonaws.com"
     prefix          = "myprefix"
   }
 
