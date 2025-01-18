@@ -14,6 +14,20 @@ resource "aws_s3_bucket" "log_storage" {
   }
 }
 
+resource "aws_s3_bucket_ownership_controls" "log_bucket_owner" {
+  bucket = aws_s3_bucket.log_storage.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_acl" "log_acl" {
+  depends_on = [aws_s3_bucket_ownership_controls.log_bucket_owner]
+
+  bucket = aws_s3_bucket.log_storage.id
+  acl    = "private"
+}
+
 resource "aws_s3_object" "object" {
   bucket = aws_s3_bucket.test_web.bucket
   key    = "new/object_key"
@@ -47,7 +61,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = aws_s3_bucket.log_storage.bucket
+    bucket          = aws_s3_bucket.log_storage.id
     prefix          = "myprefix"
   }
 
