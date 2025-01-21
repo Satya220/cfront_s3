@@ -30,13 +30,56 @@ resource "aws_s3_bucket_acl" "log_acl" {
 
 resource "aws_s3_object" "object" {
   bucket = aws_s3_bucket.test_web.bucket
-  key    = "new/object_key"
-  source = "hello-world-html/index.html"
+  key    = "index.html"
+  source = "${path.module}/hello-world-html/index.html"
 
   # The filemd5() function is available in Terraform 0.11.12 and later
   # For Terraform 0.11.11 and earlier, use the md5() function and the file() function:
   # etag = "${md5(file("path/to/file"))}"
-  etag = filemd5("hello-world-html/index.html")
+  etag = filemd5("${path.module}/hello-world-html/index.html")
+}
+
+# resource "aws_s3_object" "css_object" {
+#   bucket = aws_s3_bucket.test_web.bucket
+#   key    = "new/style_key"
+#   source = "${path.module}/hello-world-html/css/style.css"
+
+#   # The filemd5() function is available in Terraform 0.11.12 and later
+#   # For Terraform 0.11.11 and earlier, use the md5() function and the file() function:
+#   # etag = "${md5(file("path/to/file"))}"
+#   etag = filemd5("${path.module}/hello-world-html/css/style.css")
+# }
+
+resource "aws_s3_object" "error_Object" {
+  bucket = aws_s3_bucket.test_web.bucket
+  key    = "new/404.html"
+  source = "${path.module}/404.html"
+
+  # The filemd5() function is available in Terraform 0.11.12 and later
+  # For Terraform 0.11.11 and earlier, use the md5() function and the file() function:
+  # etag = "${md5(file("path/to/file"))}"
+  etag = filemd5("${path.module}/404.html")
+}
+
+resource "aws_s3_bucket_website_configuration" "example" {
+  bucket = aws_s3_bucket.test_web.id
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "404.html"
+  }
+
+  routing_rule {
+    condition {
+      key_prefix_equals = "/"
+    }
+    redirect {
+      replace_key_prefix_with = "documents/"
+    }
+  }
 }
 
 resource "aws_cloudfront_origin_access_control" "example" {
