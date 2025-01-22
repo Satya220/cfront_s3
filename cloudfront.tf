@@ -6,6 +6,20 @@ resource "aws_s3_bucket" "test_web" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "test_web_block" {
+  bucket = aws_s3_bucket.test_web.id
+
+  block_public_acls       = false
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_policy" "allow_public_read_access" {
+  bucket = aws_s3_bucket.test_web.id
+  policy = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
 resource "aws_s3_bucket" "log_storage" {
   bucket = "bscavalar-bucket"
 
