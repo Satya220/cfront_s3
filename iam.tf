@@ -50,20 +50,72 @@
 #   })
 # }
 
-data "aws_iam_policy_document" "example" {
-  statement {
-    effect = "Allow"
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
+# data "aws_iam_policy_document" "example" {
+#   statement {
+#     sid = "AllowCloudFrontServicePrincipalReadOnly"
 
-    actions = [
-                "s3:GetObject"
-    ]
+#     actions = [
+#       "s3:GetObject",
+#     ]
 
-    resources = [
-      "arn:aws:s3:::escavalar-bucket/*"
-    ]
-  }
-}
+#     principals {
+#       type = "Service"
+#       identifiers = ["cloudfront.amazonaws.com"]
+#     }
+
+#     resources = [
+#       "arn:aws:s3:::escavalar-bucket/*",
+#     ]
+
+#     condition{
+#       test = "ArnEquals"
+#       variable = "aws:SourceArn"
+#       values = [
+#         aws_cloudfront_distribution.s3_distribution.arn
+#       ]
+
+#     }
+#   }
+# }
+
+# resource "aws_iam_policy" "example" {
+#   name   = "website_policy"
+#   path   = "/"
+#   policy = data.aws_iam_policy_document.example.json
+# }
+
+# data "aws_iam_policy_document" "log_policy" {
+#   statement {
+#     sid = "AllowCloudFrontServicePrincipalReadOnly"
+
+#     actions = [
+#       "s3:GetObject",
+#       "s3:PutObject",
+#     ]
+
+#     principals {
+#       type = "Service"
+#       identifiers = ["cloudfront.amazonaws.com"]
+#     }
+
+#     resources = [
+#       "arn:aws:s3:::bscavalar-bucket/*",
+#     ]
+
+#     condition{
+#       test = "ArnEquals"
+#       variable = "aws:SourceArn"
+#       values = [
+#        aws_cloudfront_distribution.s3_distribution.arn
+#       ]
+
+#     }
+#   }
+# }
+
+# resource "aws_iam_policy" "log_pol" {
+#   name   = "log_policy"
+#   path   = "/"
+#   policy = data.aws_iam_policy_document.log_policy.json
+# }
+
